@@ -1,0 +1,27 @@
+package WordCounter
+
+import org.apache.spark._
+import org.apache.log4j._
+import org.apache.spark.SparkContext._
+
+//Creating the Scala object.
+object WordCounter {
+  def main(args: Array[String]) {
+   
+    //Setting the logger to print errors.
+    Logger.getLogger("org").setLevel(Level.ERROR)
+    
+    //Creating the SparkContext.
+    val sc = new SparkContext("local", "WordCounter")   
+    
+    //Loading the text into a RDD.
+    val inputText = sc.textFile("C:/Users/Home/Documents/...")
+    
+    //Mapping lowercased words.
+    val wordsMapped = inputText.flatMap(x => x.split("\\W+")).map(x => x.toLowerCase()).map(x => (x, 1))
+    
+    //Reducing, sorting (by the second element) in descending order and printing the results.
+    val output = wordsMapped.reduceByKey( (x,y) => x + y ).sortBy(_._2, false).foreach(println)
+
+  }
+}
