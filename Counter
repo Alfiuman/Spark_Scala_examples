@@ -1,0 +1,26 @@
+package CounterPack1
+
+import org.apache.spark._
+import org.apache.log4j._
+import org.apache.spark.SparkContext._
+
+//Creating the Scala object.
+object Counter {
+  def main(args: Array[String]) {
+   
+    //Setting the logger to print errors.
+    Logger.getLogger("org").setLevel(Level.ERROR)
+        
+    //Creating the SparkContext.
+    val sc = new SparkContext("local[*]", "Counter")
+   
+    //Loading the lines from the file.
+    val lines = sc.textFile("C:/Users/Home/Documents/SparkScala/Documents/...")
+    
+    //Mapping the second element of each line of the file.
+    val elements = lines.map(x => x.toString().split("\t")(1))
+    
+    //Reducing, sorting (by the first element), reversing and printing the results.
+    val output = elements.countByValue().toSeq.sortBy(_._1).reverse.foreach(println)
+  }
+}
